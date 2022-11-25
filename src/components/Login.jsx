@@ -5,18 +5,30 @@ import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import ShareVideo from '../assets/share.mp4';
 import Logo from '../assets/logowhite.png';
-const Login = () => {
+import { client } from '../client';
+import jwt_decode from 'jwt-decode';
+ 
 
-  const responseGoogle = (response) =>{
-    localStorage.setItem('user', JSON.stringify(response.profileObj));
-  const {name, googleId, imageUrl} = response.profileObj;
+const Login = () => {
+  const navigate = useNavigate();
+
+  const responseGoogle = async (response: any) =>{
+    const decoded = jwt_decode(response.credential);
+    console.log(decoded);
+   /* const {name, googleId, imageUrl} = response.profileObj;
     const doc = {
       _id: googleId,
       _type: 'user',
       userName: name,
       image: imageUrl,
     }
-} 
+    client.createIfNotExists(doc)
+    .then(() => {
+      navigate('/', {replace: true})
+
+    })
+  */
+};
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
@@ -35,7 +47,7 @@ const Login = () => {
           <div className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay'>
             <img src={Logo} width="130px" alt="logo" className='mb-5' />
             <GoogleLogin
-              clientId=""
+              clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}
               render={(renderProps) => (
                 <button type="button" 
                 className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay m-5'
