@@ -12,22 +12,19 @@ import jwt_decode from 'jwt-decode';
 const Login = () => {
   const navigate = useNavigate();
 
-  const responseGoogle = async (response: any) =>{
-    const decoded = jwt_decode(response.credential);
-    console.log(decoded);
-   /* const {name, googleId, imageUrl} = response.profileObj;
+  const responseGoogle = async (response) =>{
+    const {name, sub, picture} = jwt_decode(response.credential);
     const doc = {
-      _id: googleId,
+      _id: sub,
       _type: 'user',
       userName: name,
-      image: imageUrl,
+      image: picture,
     }
     client.createIfNotExists(doc)
     .then(() => {
       navigate('/', {replace: true})
 
     })
-  */
 };
 
   return (
@@ -47,8 +44,7 @@ const Login = () => {
           <div className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay'>
             <img src={Logo} width="130px" alt="logo" className='mb-5' />
             <GoogleLogin
-              clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}
-              render={(renderProps) => (
+              render={(renderProps) => ( 
                 <button type="button" 
                 className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay m-5'
                 onClick={renderProps.onClick}
@@ -58,7 +54,7 @@ const Login = () => {
                 </button>
               )}
               onSuccess={responseGoogle}
-              onFailure={responseGoogle}
+              onError={responseGoogle}
               cookiePolicy="single_host_origin "
             />
           </div>
